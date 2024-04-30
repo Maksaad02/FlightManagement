@@ -3,6 +3,7 @@
 #include <deque>
 #include <set>
 #include <algorithm>
+#include <map>
 using namespace std;
 
 // Structure pour stocker la date
@@ -24,6 +25,11 @@ private:
 public:
     // Constructeur
     Passager(int id, const string& n, const string& tel, const string& pass) : idPassager(id), nom(n), telephone(tel), passeport(pass), reservations(0) {}
+
+//Getter method for the idPassager 
+    int getIdPassager() const{
+        return idPassager;
+    }
 
 // Getter method for the name attribute
     string getNom() const {
@@ -141,14 +147,17 @@ class Reservation {
 private:
     int idReservation;
     Date dateReservation;
-    Passager* passager;
+    const Passager* passager;
     Vol* vol;
     Paiement* paiement;
 public:
-    // Constructeur, méthodes, etc.
+    // Constructor
+    Reservation(int id, Date& date, const Passager* p, Vol* v, Paiement* pay)
+        : idReservation(id), dateReservation(date), passager(p), vol(v), paiement(pay) {}
 };
 
 int main() {
+
     deque<Vol> listeVols;
 
     // Demander à l'utilisateur de remplir les vols
@@ -351,6 +360,79 @@ int main() {
     for (const Passager& passager : ensemblePassagers) {
         passager.FacturePaiement();
     }
+
+
+
+
+// Dans la fonction main après la saisie des vols et des passagers
+
+// Créer un map pour stocker les réservations
+std::map<int, Reservation> mapReservations;
+
+// Demander à l'utilisateur de remplir le map avec les réservations
+int nombreReservations;
+cout << "Combien de réservations souhaitez-vous ajouter ? ";
+cin >> nombreReservations;
+
+for (int i = 0; i < nombreReservations; ++i) {
+    int idReservation;
+    Date dateReservation;
+    const Passager* passager = nullptr; // Initialisation à nullptr pour le cas où le passager n'est pas trouvé   ***const pour ne pas modifier dans l'objet original
+    Vol* vol = nullptr; // Initialisation à nullptr pour le cas où le vol n'est pas trouvé
+    Paiement* paiement = nullptr; // Initialisation à nullptr pour le cas où le paiement n'est pas trouvé
+
+    cout << "Réservation #" << i + 1 << ":" << endl;
+    cout << "ID de la réservation : ";
+    cin >> idReservation;
+    cout << "Date de la réservation (jour mois annee) : ";
+    cin >> dateReservation.jour >> dateReservation.mois >> dateReservation.annee;
+
+    // Demander à l'utilisateur de saisir l'ID du passager
+    int idPassager;
+    cout << "ID du passager : ";
+    cin >> idPassager;
+
+    // Rechercher le passager correspondant dans l'ensemble des passagers
+    for (const Passager& p : ensemblePassagers) {
+        if (p.getIdPassager() == idPassager) {
+            passager = &p;
+            break;
+        }
+    }
+
+    if (passager == nullptr) {
+        cout << "Passager non trouvé !" << endl;
+        // Gérer le cas où le passager n'est pas trouvé
+        continue; // Passer à la prochaine itération de la boucle
+    }
+
+    // Demander à l'utilisateur de saisir le numéro du vol
+    string numeroVol;
+    cout << "Numéro du vol : ";
+    cin >> numeroVol;
+
+    // Rechercher le vol correspondant dans la liste des vols
+    for ( Vol& v : listeVols) {
+        if (v.getNumeroVol() == numeroVol) {
+            vol = &v;
+            break;
+        }
+    }
+
+    if (vol == nullptr) {
+        cout << "Vol non trouvé !" << endl;
+        // Gérer le cas où le vol n'est pas trouvé
+        continue; // Passer à la prochaine itération de la boucle
+    }
+
+//     // Demander à l'utilisateur de saisir les informations sur le paiement (à compléter selon vos besoins)
+
+//     // Créer l'objet réservation avec les informations saisies
+//     Reservation reservation(idReservation, dateReservation, passager, vol, paiement);
+
+//     // Stocker la réservation dans le map associée à son ID
+//     mapReservations[idReservation] = reservation;
+}
 
 
         return 0;

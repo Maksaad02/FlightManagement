@@ -26,7 +26,7 @@ public:
     // Constructeur
     Passager(int id, const string& n, const string& tel, const string& pass) : idPassager(id), nom(n), telephone(tel), passeport(pass), reservations(0) {}
 
-//Getter method for the idPassager
+//Getter method for the idPassager 
     int getIdPassager() const{
         return idPassager;
     }
@@ -153,11 +153,9 @@ public:
     const Passager* passager;
 
     // Constructor
-    // Constructeur par défaut
-        Reservation() : idReservation(0), dateReservation({0, 0, 0}), passager(nullptr), vol(nullptr), paiement(nullptr) {}
-    
-    Reservation(int id, const Date& date, const Passager* p, Vol* v, Paiement* pay)
-            : idReservation(id), dateReservation(date), passager(p), vol(v), paiement(pay) {}        //Setter utilisé dans la derniere fonctionnalité pour modifier le passager
+    Reservation(int id,const Date& date, const Passager* p, Vol* v, Paiement* pay)
+        : idReservation(id), dateReservation(date), passager(p), vol(v), paiement(pay) {}
+        //Setter utilisé dans la derniere fonctionnalité pour modifier le passager
         void setPassager( Passager* newPassager) {
             passager = newPassager;
         }
@@ -478,9 +476,9 @@ for (int i = 0; i < nombreReservations; ++i) {
             reservationAModifier.passager = nouveauPassager;
             cout << "Le passager de la réservation a été mis à jour avec succès." << endl;
 
-        mapReservations[idReservationAModifier] = reservationAModifier;
+        mapReservations[idReservation] = reservationAModifier;
 
-        }
+        } 
         else {
             cout << "Passager non trouvé !" << endl;
         }
@@ -488,30 +486,6 @@ for (int i = 0; i < nombreReservations; ++i) {
         cout << "Réservation non trouvée !" << endl;
     }
 }
-
-
-
-// Permettre à l'utilisateur de supprimer une réservation donnée
-cout << "Voulez-vous supprimer une réservation ? (o/n) ";
-char choix3;
-cin >> choix3;
-if(choix3 == 'o'){
-    // Demander à l'utilisateur l'ID de la réservation à supprimer
-    int idReservationASupprimer;
-    cout << "Entrez l'ID de la réservation à supprimer : ";
-    cin >> idReservationASupprimer;
-
-    // Recherche de la réservation correspondante dans le map
-    auto it = mapReservations.find(idReservationASupprimer);
-    if (it != mapReservations.end()) {
-        // Supprimer la réservation du map
-        mapReservations.erase(it);
-        cout << "La réservation a été supprimée avec succès." << endl;
-    } else {
-        cout << "Réservation non trouvée !" << endl;
-    }
-}
-
 
         return 0;
     }

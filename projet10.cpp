@@ -51,13 +51,13 @@ public:
     }
 
     // Méthode FacturePaiement
-    void FacturePaiement() const {
-        // Implémentation de la méthode
-        // Affichage de la facture de paiement
+    void FacturePaiement(double montantTotal) const {
+        // Affichage de la facture de paiement avec le montant total
         cout << "Facture de paiement pour le passager " << nom << " (ID: " << idPassager << ")" << endl;
+        cout << "Montant total à payer : " << montantTotal << endl;
         // ......zid les details dial la facture
-     
     }
+
 };
 
 // Classe Paiement
@@ -395,22 +395,44 @@ int main() {
 
                 // Réduction de 20% sur le total à payer si le nombre de réservations est supérieur à 5
                 for (const Passager& passager : ensemblePassagers) {
-
                     if (passager.getNombreReservations() > 5) {
-                        // Appliquer la réduction sur le total à payer du passager
-                        // Code pour appliquer la réduction
+                        double reduction = 0.20; // 20% de réduction
+                        // Parcourir les réservations de ce passager
+                        for (const auto& pair : mapReservations) {
+                            const Reservation& reservation = pair.second;
+                            // Vérifier si cette réservation est associée à ce passager
+                            if (reservation.getPassager()->getIdPassager() == passager.getIdPassager()) {
+                                // Appliquer la réduction sur le montant total de cette réservation
+                                double montantTotal = reservation.calculerMontantTotal();
+                                montantTotal *= (1 - reduction);
+                                // Afficher le montant total après réduction
+                                cout << "Montant total après réduction pour la réservation " << pair.first << " : " << montantTotal << endl;
+                            }
+                        }
                     }
                 }
 
+
                 // Afficher la facture de paiement pour chaque passager
                 for (const Passager& passager : ensemblePassagers) {
-                    passager.FacturePaiement();
+                    // Calculer le montant total à payer pour ce passager
+                    double montantTotal = 0.0;
+                    for (const auto& pair : mapReservations) {
+                        const Reservation& reservation = pair.second;
+                        if (reservation.getPassager()->getIdPassager() == passager.getIdPassager()) {
+                            montantTotal += reservation.calculerMontantTotal();
+                        }
+                    }
+                    // Afficher la facture de paiement pour ce passager avec le montant total
+                    passager.FacturePaiement(montantTotal);
                 }
 
-            break;
 
 
-            // Dans la fonction main après la saisie des vols et des passagers                
+
+
+//             Dans la fonction main après la saisie des vols et des passagers
+                break;
             }
             case '3': {
                 // Implémentation de la Fonctionnalité III : Gestion des réservations
@@ -484,7 +506,8 @@ int main() {
 
                     // Créer l'objet réservation avec les informations saisies
                     Reservation reservation(idReservation, dateReservation, passager, vol, paiement);
-
+                    Passager* passagerNonConst = const_cast<Passager*>(passager);
+                    passagerNonConst->incrementerReservations();
                     // Stocker la réservation dans le map associée à son ID
                     mapReservations[idReservation] = reservation;
                 }

@@ -537,44 +537,31 @@ int main()
                         }
                        } while (!passagerTrouve);
 
-                       if (!passagerTrouve) { 
+                    if (!passagerTrouve) { 
                         continue; 
                         }
                     
 
                     // Demander à l'utilisateur de saisir le numéro du vol
                     string numeroVol;
-                    bool volTrouve=false;
+                    cout << "Numéro du vol : ";
+                    cin >> numeroVol;
 
-                    do
+                    // Rechercher le vol correspondant dans la liste des vols
+                    for (Vol &v : listeVols)
                     {
-                        cout << "Numéro du vol : ";
-                        cin >> numeroVol;
+                        if (v.getNumeroVol() == numeroVol)
+                        {
+                            vol = &v;
+                            break;
+                        }
+                    }
 
-                        // Rechercher le vol correspondant dans la liste des vols
-                        for (Vol &v : listeVols)
-                        {
-                            if (v.getNumeroVol() == numeroVol)
-                            {
-                                vol = &v;
-                                volTrouve = true;
-                                break;
-                            }
-                        }
-                        if (!volTrouve)
-                        {
-                            char reponse;
-                            cout<<"Vol non trouvé ! Voulez vous re-essayer? (o/n)"<<endl;
-                            cin>>reponse;
-                            if(reponse != 'o'){
-                                break;
-                            }
-                        }
-                        
-                    } while (!volTrouve);
-                    if (!volTrouve)
+                    if (vol == nullptr)
                     {
-                        continue; 
+                        cout << "Vol non trouvé !" << endl;
+                        // Gérer le cas où le vol n'est pas trouvé
+                        continue; // Passer à la prochaine itération de la boucle
                     }
 
                     // Demander à l'utilisateur de saisir les informations sur le paiement
@@ -597,7 +584,7 @@ int main()
                     // Stocker la réservation dans le map associée à son ID
                     mapReservations[idReservation] = reservation;
                 }
-
+                
                 // Permettre à l'utilisateur de modifier le passager d'une réservation donnée
                 cout << "Voulez-vous modifier le passager d'une réservation ? (o/n) ";
                 char choix2;

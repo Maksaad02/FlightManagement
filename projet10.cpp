@@ -40,10 +40,11 @@ public:
         return nom;
     }
 
-    string getPasseport() const{
+    string getPasseport() const
+    {
         return passeport;
     }
-    
+
     bool operator<(const Passager &other) const
     {
         return idPassager < other.idPassager;
@@ -88,7 +89,6 @@ public:
     {
         return methodePaiement;
     }
-    
 };
 
 // Classe Vol
@@ -168,9 +168,8 @@ private:
 
 public:
     VolBusiness(const string &num, const string &dep, const string &arr, const Date &depDate, const Date &arrDate, int places, double pri, const string &conf) : Vol(num, dep, arr, depDate, arrDate, places, pri), confort(conf) {}
-    
+
     // ***confort getter needed
-    
 };
 
 // Classe Reservation
@@ -185,23 +184,25 @@ private:
 public:
     const Passager *passager;
     // méthode pour obtenir le vol associé à la réservation (version const)
-        const Vol* getVol() const {
-            return vol;
-        }
+    const Vol *getVol() const
+    {
+        return vol;
+    }
     // constructeur par défaut
     Reservation() : idReservation(0), dateReservation({0, 0, 0}), passager(nullptr), vol(nullptr), paiement(nullptr) {}
 
-    //getter id reservation
-    int getIdReservation() const {
+    // getter id reservation
+    int getIdReservation() const
+    {
         return idReservation;
     }
-    
-    
-    //getter date reservation
-    Date getDateReservation() const{
+
+    // getter date reservation
+    Date getDateReservation() const
+    {
         return dateReservation;
     }
-    
+
     Reservation(int id, const Date &date, const Passager *p, Vol *v, Paiement *pay)
         : idReservation(id), dateReservation(date), passager(p), vol(v), paiement(pay) {} // Setter utilisé dans la derniere fonctionnalité pour modifier le passager
     void setPassager(Passager *newPassager)
@@ -293,77 +294,105 @@ int main()
             cin >> choix;
             if (choix == 'm')
             { // Modification
-                // Demander à l'utilisateur le numéro du vol à modifier
-                string numeroVol;
-                cout << "Entrez le numéro du vol à modifier : ";
-                cin >> numeroVol;
+                bool volTrouve = false;
 
-                // Rechercher le vol dans la liste
-                bool trouve = false;
-                for (Vol &vol : listeVols)
+                do
                 {
-                    if (vol.getNumeroVol() == numeroVol)
+                    // Demander à l'utilisateur le numéro du vol à modifier
+
+                    string numeroVol;
+                    cout << "Entrez le numéro du vol à modifier : ";
+                    cin >> numeroVol;
+
+                    for (Vol &vol : listeVols)
                     {
-                        // Demander à l'utilisateur de saisir les nouvelles informations
-                        string newNumeroVol, newAeroportDepart, newAeroportArrivee;
-                        Date newDateDepart, newDateArrivee;
-                        int newPlacesDisponibles;
-                        double newPrix;
+                        if (vol.getNumeroVol() == numeroVol)
+                        {
+                            volTrouve = true;
 
-                        cout << "Entrez le nouveau numéro de vol : ";
-                        cin >> newNumeroVol;
-                        cout << "Entrez le nouvel aéroport de départ : ";
-                        cin >> newAeroportDepart;
-                        cout << "Entrez le nouvel aéroport d'arrivée : ";
-                        cin >> newAeroportArrivee;
-                        cout << "Entrez la nouvelle date de départ (jour mois annee) : ";
-                        cin >> newDateDepart.jour >> newDateDepart.mois >> newDateDepart.annee;
-                        cout << "Entrez la nouvelle date d'arrivée (jour mois annee) : ";
-                        cin >> newDateArrivee.jour >> newDateArrivee.mois >> newDateArrivee.annee;
-                        cout << "Entrez le nouveau nombre de places disponibles : ";
-                        cin >> newPlacesDisponibles;
-                        cout << "Entrez le nouveau prix : ";
-                        cin >> newPrix;
+                            // Demander à l'utilisateur de saisir les nouvelles informations
+                            string newNumeroVol, newAeroportDepart, newAeroportArrivee;
+                            Date newDateDepart, newDateArrivee;
+                            int newPlacesDisponibles;
+                            double newPrix;
 
-                        // Modifier les informations du vol
-                        vol.setNumeroVol(newNumeroVol);
-                        vol.setAeroportDepart(newAeroportDepart);
-                        vol.setAeroportArrivee(newAeroportArrivee);
-                        vol.setDateDepart(newDateDepart);
-                        vol.setDateArrivee(newDateArrivee);
-                        vol.setPlacesDisponibles(newPlacesDisponibles);
-                        vol.setPrix(newPrix);
+                            cout << "Entrez le nouveau numéro de vol : ";
+                            cin >> newNumeroVol;
+                            cout << "Entrez le nouvel aéroport de départ : ";
+                            cin >> newAeroportDepart;
+                            cout << "Entrez le nouvel aéroport d'arrivée : ";
+                            cin >> newAeroportArrivee;
+                            cout << "Entrez la nouvelle date de départ (jour mois annee) : ";
+                            cin >> newDateDepart.jour >> newDateDepart.mois >> newDateDepart.annee;
+                            cout << "Entrez la nouvelle date d'arrivée (jour mois annee) : ";
+                            cin >> newDateArrivee.jour >> newDateArrivee.mois >> newDateArrivee.annee;
+                            cout << "Entrez le nouveau nombre de places disponibles : ";
+                            cin >> newPlacesDisponibles;
+                            cout << "Entrez le nouveau prix : ";
+                            cin >> newPrix;
 
-                        trouve = true;
-                        break;
+                            // Modifier les informations du vol
+                            vol.setNumeroVol(newNumeroVol);
+                            vol.setAeroportDepart(newAeroportDepart);
+                            vol.setAeroportArrivee(newAeroportArrivee);
+                            vol.setDateDepart(newDateDepart);
+                            vol.setDateArrivee(newDateArrivee);
+                            vol.setPlacesDisponibles(newPlacesDisponibles);
+                            vol.setPrix(newPrix);
+
+                            cout << "Vol modifié avec succès !" << endl;
+                            break;
+                        }
                     }
-                }
 
-                if (!trouve)
-                {
-                    cout << "Vol non trouvé !" << endl;
-                }
+                    if (!volTrouve)
+                    {
+                        char reponse;
+                        cout << "Vol non trouvé !" << endl;
+                        cout << "Voulez-vous réessayer ? (o/n) " << endl;
+                        cin >> reponse;
+                        if (reponse != 'o')
+                        {
+                            break;
+                        }
+                    }
+                } while (!volTrouve);
             }
+
             else if (choix == 's')
             { // Suppression
-                // Demander à l'utilisateur le numéro du vol à supprimer
-                string numeroVol;
-                cout << "Entrez le numéro du vol à supprimer : ";
-                cin >> numeroVol;
+                bool volTrouve = false;
 
-                // Rechercher le vol dans la liste
-                auto it = find_if(listeVols.begin(), listeVols.end(), [&numeroVol](const Vol &vol)
-                                  { return vol.getNumeroVol() == numeroVol; });
+                do
+                {
+                    // Demander à l'utilisateur le numéro du vol à supprimer
+                    string numeroVol;
+                    cout << "Entrez le numéro du vol à supprimer : ";
+                    cin >> numeroVol;
 
-                if (it != listeVols.end())
-                {
-                    listeVols.erase(it);
-                    cout << "Vol supprimé avec succès !" << endl;
-                }
-                else
-                {
-                    cout << "Vol non trouvé !" << endl;
-                }
+                    // Rechercher le vol dans la liste
+                    auto it = find_if(listeVols.begin(), listeVols.end(), [&numeroVol](const Vol &vol)
+                                      { return vol.getNumeroVol() == numeroVol; });
+
+                    if (it != listeVols.end())
+                    {
+                        volTrouve = true;
+                        listeVols.erase(it);
+                        cout << "Vol supprimé avec succès !" << endl;
+                    }
+                    else
+                    {
+                        cout << "Vol non trouvé !" << endl;
+                        cout << "Voulez-vous réessayer ? (o/n) ";
+                        char reponse;
+                        cin >> reponse;
+                        if (reponse == 'n')
+                        {
+                            break;
+                        }
+                    }
+
+                } while (!volTrouve);
             }
             else
             {
@@ -430,7 +459,7 @@ int main()
             // *** Implémentation de la Fonctionnalité II : Gestion des passagers ***
             // Demander à l'utilisateur de remplir l'ensemble des passagers
             int nombrePassagers;
-            cout << "Combien de passagers souhaitez-vous ajouter ? "<<endl;
+            cout << "Combien de passagers souhaitez-vous ajouter ? " << endl;
             cin >> nombrePassagers;
 
             for (int i = 0; i < nombrePassagers; ++i)
@@ -441,16 +470,16 @@ int main()
                 cout << "Passager #" << i + 1 << ":" << endl;
                 cout << "ID du passager : ";
                 cin >> idPassager;
-                cout <<endl;
+                cout << endl;
                 cout << "Nom du passager : ";
                 cin >> nom;
-                cout <<endl;
+                cout << endl;
                 cout << "Numéro de téléphone : ";
                 cin >> telephone;
-                cout <<endl;
+                cout << endl;
                 cout << "Numéro de passeport : ";
                 cin >> passeport;
-                cout <<endl;
+                cout << endl;
 
                 // Créer le passager et l'ajouter à l'ensemble
                 Passager passager(idPassager, nom, telephone, passeport);
@@ -552,202 +581,209 @@ int main()
                         char reponse;
                         cout << "Passager non trouvé ! voulez vous re-essayer? (o/n)" << endl;
                         cin >> reponse;
-                        cout<<endl;
+                        cout << endl;
                         if (reponse != 'o')
                         {
                             break;
                         }
-                        }
-                       } while (!passagerTrouve);
+                    }
+                } while (!passagerTrouve);
 
-                       if (!passagerTrouve) {
-                        continue;
-                        }
-                    
+                if (!passagerTrouve)
+                {
+                    continue;
+                }
 
-                    // Demander à l'utilisateur de saisir le numéro du vol
-                    string numeroVol;
-                    bool volTrouve=false;
+                // Demander à l'utilisateur de saisir le numéro du vol
+                string numeroVol;
+                bool volTrouve = false;
 
-                    do
+                do
+                {
+                    cout << "Numéro du vol : ";
+                    cin >> numeroVol;
+
+                    // Rechercher le vol correspondant dans la liste des vols
+                    for (Vol &v : listeVols)
                     {
-                        cout << "Numéro du vol : ";
-                        cin >> numeroVol;
-
-                        // Rechercher le vol correspondant dans la liste des vols
-                        for (Vol &v : listeVols)
+                        if (v.getNumeroVol() == numeroVol)
                         {
-                            if (v.getNumeroVol() == numeroVol)
-                            {
-                                vol = &v;
-                                volTrouve = true;
-                                break;
-                            }
+                            vol = &v;
+                            volTrouve = true;
+                            break;
                         }
-                        if (!volTrouve)
-                        {
-                            char reponse;
-                            cout<<"Vol non trouvé ! Voulez vous re-essayer? (o/n)"<<endl;
-                            cin>>reponse;
-                            cout<<endl;
-                            if(reponse != 'o'){
-                                break;
-                            }
-                        }
-                        
-                    } while (!volTrouve);
+                    }
                     if (!volTrouve)
                     {
-                        continue;
+                        char reponse;
+                        cout << "Vol non trouvé ! Voulez vous re-essayer? (o/n)" << endl;
+                        cin >> reponse;
+                        cout << endl;
+                        if (reponse != 'o')
+                        {
+                            break;
+                        }
                     }
 
-                    // Demander à l'utilisateur de saisir les informations sur le paiement
-                    string methodePaiement;
-                    cout << "Méthode de paiement (carte bancaire/especes/cheque) : ";
-                    cin >> methodePaiement;
-                    cout<<endl;
-
-                    // Créer l'objet paiement avec les informations saisies
-                    double montantTotal = vol->getPrix(); // Montant total initial
-                    if (methodePaiement == "carteBancaire")
-                    {
-                        montantTotal *= 0.85; // Appliquer une réduction de 15% pour les paiements par carte bancaire
-                    }
-                    paiement = new Paiement(idReservation, montantTotal, dateReservation, methodePaiement);
-
-                    // Créer l'objet réservation avec les informations saisies
-                    Reservation reservation(idReservation, dateReservation, passager, vol, paiement);
-                    Passager *passagerNonConst = const_cast<Passager *>(passager);
-                    passagerNonConst->incrementerReservations();
-                    // Stocker la réservation dans le map associée à son ID
-                    mapReservations[idReservation] = reservation;
+                } while (!volTrouve);
+                if (!volTrouve)
+                {
+                    continue;
                 }
 
-                // Permettre à l'utilisateur de modifier le passager d'une réservation donnée
-                cout << "Voulez-vous modifier le passager d'une réservation ? (o/n) ";
-                char choix2;
-                cin >> choix2;
-                cout<<endl;
-                if (choix2 == 'o')
+                // Demander à l'utilisateur de saisir les informations sur le paiement
+                string methodePaiement;
+                cout << "Méthode de paiement (carte bancaire/especes/cheque) : ";
+                cin >> methodePaiement;
+                cout << endl;
+
+                // Créer l'objet paiement avec les informations saisies
+                double montantTotal = vol->getPrix(); // Montant total initial
+                if (methodePaiement == "carteBancaire")
                 {
-                    // Demander à l'utilisateur l'ID de la réservation à modifier
-                    int idReservationAModifier;
-                    cout << "Entrez l'ID de la réservation à modifier : ";
-                    cin >> idReservationAModifier;
-                    cout<<endl;
+                    montantTotal *= 0.85; // Appliquer une réduction de 15% pour les paiements par carte bancaire
+                }
+                paiement = new Paiement(idReservation, montantTotal, dateReservation, methodePaiement);
 
-                    // Recherche de la réservation correspondante dans le map
-                    auto it = mapReservations.find(idReservationAModifier);
-                    if (it != mapReservations.end() /*means reservation trouvée*/)
+                // Créer l'objet réservation avec les informations saisies
+                Reservation reservation(idReservation, dateReservation, passager, vol, paiement);
+                Passager *passagerNonConst = const_cast<Passager *>(passager);
+                passagerNonConst->incrementerReservations();
+                // Stocker la réservation dans le map associée à son ID
+                mapReservations[idReservation] = reservation;
+            }
+
+            // Permettre à l'utilisateur de modifier le passager d'une réservation donnée
+            cout << "Voulez-vous modifier le passager d'une réservation ? (o/n) ";
+            char choix2;
+            cin >> choix2;
+            cout << endl;
+            if (choix2 == 'o')
+            {
+                // Demander à l'utilisateur l'ID de la réservation à modifier
+                int idReservationAModifier;
+                cout << "Entrez l'ID de la réservation à modifier : ";
+                cin >> idReservationAModifier;
+                cout << endl;
+
+                // Recherche de la réservation correspondante dans le map
+                auto it = mapReservations.find(idReservationAModifier);
+                if (it != mapReservations.end() ) //means reservation trouvée
+                {
+                    Reservation &reservationAModifier = it->second; // we modified the second value of the map(->second )  with a reference to avoid copying
+
+                    // Demander à l'utilisateur le nouvel ID du passager
+                    int nouvelIdPassager;
+                    cout << "Entrez le nouvel ID du passager : ";
+                    cin >> nouvelIdPassager;
+                    cout << endl;
+
+                    // Recherche du nouveau passager dans l'ensemble des passagers
+                    const Passager *nouveauPassager = nullptr;
+                    for (const Passager &passager : ensemblePassagers)
                     {
-                        Reservation &reservationAModifier = it->second; // we modified the second value of the map(->second )  with a reference to avoid copying
-
-                        // Demander à l'utilisateur le nouvel ID du passager
-                        int nouvelIdPassager;
-                        cout << "Entrez le nouvel ID du passager : ";
-                        cin >> nouvelIdPassager;
-                        cout<<endl;
-
-                        // Recherche du nouveau passager dans l'ensemble des passagers
-                        const Passager *nouveauPassager = nullptr;
-                        for (const Passager &passager : ensemblePassagers)
+                        if (passager.getIdPassager() == nouvelIdPassager)
                         {
-                            if (passager.getIdPassager() == nouvelIdPassager)
-                            {
-                                nouveauPassager = &passager;
-                                break;
-                            }
+                            nouveauPassager = &passager;
+                            break;
                         }
+                    }
 
-                        if (nouveauPassager != nullptr)
-                        {
-                            // Mettre à jour le passager de la réservation
-                            reservationAModifier.passager = nouveauPassager;
-                            cout << "Le passager de la réservation a été mis à jour avec succès." << endl;
+                    if (nouveauPassager != nullptr)
+                    {
+                        // Mettre à jour le passager de la réservation
+                        reservationAModifier.passager = nouveauPassager;
+                        cout << "Le passager de la réservation a été mis à jour avec succès." << endl;
 
-                            mapReservations[idReservationAModifier] = reservationAModifier;
-                        }
-                        else
-                        {
-                            cout << "Passager non trouvé !" << endl;
-                            
-                        }
+                        mapReservations[idReservationAModifier] = reservationAModifier;
                     }
                     else
                     {
-                        cout << "Réservation non trouvée !" << endl;
+                        cout << "Passager non trouvé !" << endl;
                     }
                 }
-
-                // Permettre à l'utilisateur de supprimer une réservation donnée
-                cout << "Voulez-vous supprimer une réservation ? (o/n) ";
-                char choix3;
-                cin >> choix3;
-                cout<<endl;
-                if (choix3 == 'o')
+                else
                 {
-                    // Demander à l'utilisateur l'ID de la réservation à supprimer
-                    int idReservationASupprimer;
-                    cout << "Entrez l'ID de la réservation à supprimer : ";
-                    cin >> idReservationASupprimer;
+                    cout << "Réservation non trouvée !" << endl;
+                }
+            }
 
-                    // Recherche de la réservation correspondante dans le map
-                    auto it = mapReservations.find(idReservationASupprimer);
-                    if (it != mapReservations.end())
+            // Permettre à l'utilisateur de supprimer une réservation donnée
+            cout << "Voulez-vous supprimer une réservation ? (o/n) ";
+            char choix3;
+            cin >> choix3;
+            cout << endl;
+            if (choix3 == 'o')
+            {
+                // Demander à l'utilisateur l'ID de la réservation à supprimer
+                int idReservationASupprimer;
+                cout << "Entrez l'ID de la réservation à supprimer : ";
+                cin >> idReservationASupprimer;
+
+                // Recherche de la réservation correspondante dans le map
+                auto it = mapReservations.find(idReservationASupprimer);
+                if (it != mapReservations.end())
+                {
+                    // Supprimer la réservation du map
+                    mapReservations.erase(it);
+                    cout << "La réservation a été supprimée avec succès." << endl;
+                }
+                else
+                {
+                    cout << "Reservation non trouvee !" << endl;
+                }
+            }
+            break;
+        }
+        case '4':
+        {
+
+            for (const Passager &passager : ensemblePassagers)
+            {
+                cout << "Identifiant passager: " << passager.getIdPassager() << endl;
+                cout << "Numero passeport: " << passager.getPasseport() << endl;
+                cout << "Nom passager: " << passager.getNom() << endl;
+
+                // Calculer le total des réservations du passager
+                int totalReservations = 0;
+
+                // Parcourir les réservations
+                for (const auto &pair : mapReservations)
+                {
+                    const Reservation &reservation = pair.second;
+                    if (reservation.getPassager()->getIdPassager() == passager.getIdPassager())
                     {
-                        // Supprimer la réservation du map
-                        mapReservations.erase(it);
-                        cout << "La reservation a été supprimée avec succès." << endl;
-                    }
-                    else
-                    {
-                        cout << "Reservation non trouvee !" << endl;
+                        // Afficher les détails de la réservation
+                        cout << "Identifiant reservation: " << reservation.getIdReservation() << endl;
+                        cout << "Date: " << reservation.getDateReservation().jour << "/" << reservation.getDateReservation().mois << "/" << reservation.getDateReservation().annee << endl;
+                        cout << "Numero de vol: " << reservation.getVol()->getNumeroVol() << endl;
+                        cout << "Prix vol: " << reservation.getVol()->getPrix() << endl;
+
+                        totalReservations++;
                     }
                 }
-                break;
-            }
-        case '4':{
 
-                for (const Passager& passager : ensemblePassagers) {
-                    cout << "Identifiant passager: " << passager.getIdPassager() << endl;
-                    cout << "Numero passeport: " << passager.getPasseport() << endl;
-                    cout << "Nom passager: " << passager.getNom() << endl;
-
-                    // Calculer le total des réservations du passager
-                    int totalReservations = 0;
-
-                    // Parcourir les réservations
-                    for (const auto& pair : mapReservations) {
-                        const Reservation& reservation = pair.second;
-                        if (reservation.getPassager()->getIdPassager() == passager.getIdPassager()) {
-                            // Afficher les détails de la réservation
-                            cout << "Identifiant reservation: " << reservation.getIdReservation() << endl;
-                            cout << "Date: " << reservation.getDateReservation().jour << "/" << reservation.getDateReservation().mois << "/" << reservation.getDateReservation().annee << endl;
-                            cout << "Numero de vol: " << reservation.getVol()->getNumeroVol() << endl;
-                            cout << "Prix vol: " << reservation.getVol()->getPrix() << endl;
-
-                            totalReservations++;
-                        }
+                // Calculer le montant total à payer
+                double montantTotalAPayer = 0.0;
+                for (const auto &pair : mapReservations)
+                {
+                    const Reservation &reservation = pair.second;
+                    if (reservation.getPassager()->getIdPassager() == passager.getIdPassager())
+                    {
+                        montantTotalAPayer += reservation.calculerMontantTotal();
                     }
-
-                    // Calculer le montant total à payer
-                    double montantTotalAPayer = 0.0;
-                    for (const auto& pair : mapReservations) {
-                        const Reservation& reservation = pair.second;
-                        if (reservation.getPassager()->getIdPassager() == passager.getIdPassager()) {
-                            montantTotalAPayer += reservation.calculerMontantTotal();
-                        }
-                    }
-
-                    // Afficher le total des réservations et le montant total à payer pour ce passager
-                    cout << "Total des reservations: " << totalReservations << endl;
-                    cout << "Montant total à payer: " << montantTotalAPayer << endl;
                 }
 
-                break;
+                // Afficher le total des réservations et le montant total à payer pour ce passager
+                cout << "Total des reservations: " << totalReservations << endl;
+                cout << "Montant total à payer: " << montantTotalAPayer << endl;
             }
-        
-            case '5': {
+
+            break;
+        }
+
+        case '5':
+        {
             cout << "Programme termine." << endl;
             break;
         }
@@ -758,9 +794,7 @@ int main()
             break;
         }
         }
-        }
-        while (choixMenu != '5')
-            ;
+    } while (choixMenu != '5');
 
-        return 0;
-    }
+    return 0;
+}

@@ -6,7 +6,7 @@
 #include <map>
 using namespace std;
 
-// Structure pour stocker la date
+// structure pour stocker la date
 struct Date
 {
     int jour;
@@ -22,45 +22,49 @@ private:
     string nom;
     string telephone;
     string passeport;
-    int reservations; // Ajout d'un compteur de réservations pour fonctionnalité 2
+    int reservations; // ajout d'un compteur de réservations pour fonctionnalité 2
 
 public:
-    // Constructeur
+    // constructeur
     Passager(int id, const string &n, const string &tel, const string &pass) : idPassager(id), nom(n), telephone(tel), passeport(pass), reservations(0) {}
 
-    // Getter method for the idPassager
+    // getter method for the idPassager
     int getIdPassager() const
     {
         return idPassager;
     }
 
-    // Getter method for the name attribute
+    // getter method for the name attribute
     string getNom() const
     {
         return nom;
     }
 
+    string getPasseport() const{
+        return passeport;
+    }
+    
     bool operator<(const Passager &other) const
     {
         return idPassager < other.idPassager;
     }
 
-    // Méthode pour obtenir le nombre de réservations
+    // méthode pour obtenir le nombre de réservations
     int getNombreReservations() const
     {
         return reservations;
     }
 
-    // Méthode pour incrémenter le nombre de réservations
+    // méthode pour incrémenter le nombre de réservations
     void incrementerReservations()
     {
         reservations++;
     }
 
-    // Méthode FacturePaiement
+    // méthode FacturePaiement
     void FacturePaiement(double montantTotal) const
     {
-        // Affichage de la facture de paiement avec le montant total
+        // affichage de la facture de paiement avec le montant total
         cout << "Facture de paiement pour le passager " << nom << " (ID: " << idPassager << ")" << endl;
         cout << "Montant total à payer : " << montantTotal << endl;
         // ......zid les details dial la facture
@@ -77,14 +81,14 @@ private:
     string methodePaiement;
 
 public:
-    // Constructeur
+    // constructeur
     Paiement(int id, double mont, const Date &date, const string &methodeP) : idPaiement(id), montant(mont), datePaiement(date), methodePaiement(methodeP) {}
-    // Getter pour obtenir le mode de paiement
+    // getter pour obtenir le mode de paiement
     string getMethodePaiement() const
     {
         return methodePaiement;
     }
-    // Autres méthodes, etc.
+    
 };
 
 // Classe Vol
@@ -100,10 +104,10 @@ private:
     double prix;
 
 public:
-    // Constructeur
+    // constructeur
     Vol(const string &num, const string &dep, const string &arr, const Date &dateDep, const Date &dateArr, int places, double pri) : numeroVol(num), aeroportDepart(dep), aeroportArrivee(arr), dateDepart(dateDep), dateArrivee(dateArr), placesDisponibles(places), prix(pri) {}
 
-    // Méthodes pour accéder/modifier les attributs
+    // méthodes pour accéder/modifier les attributs
     void setNumeroVol(const string &num) { numeroVol = num; }
     void setAeroportDepart(const string &dep) { aeroportDepart = dep; }
     void setAeroportArrivee(const string &arr) { aeroportArrivee = arr; }
@@ -116,13 +120,13 @@ public:
     {
         return numeroVol;
     }
-    // Getter pour obtenir la date de départ
+    // getter pour obtenir la date de départ
     Date getDateDepart() const
     {
         return dateDepart;
     }
 
-    // Getter pour obtenir le nombre de places disponibles
+    // getter pour obtenir le nombre de places disponibles
     int getPlacesDisponibles() const
     {
         return placesDisponibles;
@@ -133,7 +137,7 @@ public:
         return prix;
     }
 
-    // Méthode pour augmenter le prix du vol de 10%
+    // méthode pour augmenter le prix du vol de 10%
     void augmenterPrix()
     {
         prix *= 1.1;
@@ -153,7 +157,7 @@ bool comparerDates(const Date &d1, const Date &d2)
 // Classe VolEconomique
 class VolEconomique : public Vol
 {
-    // Aucun attribut supplémentaire nécessaire
+    // aucun attribut supplémentaire nécessaire
 };
 
 // Classe VolBusiness
@@ -164,9 +168,9 @@ private:
 
 public:
     VolBusiness(const string &num, const string &dep, const string &arr, const Date &depDate, const Date &arrDate, int places, double pri, const string &conf) : Vol(num, dep, arr, depDate, arrDate, places, pri), confort(conf) {}
-    // Autres méthodes, etc.
+    
     // ***confort getter needed
-    // Constructeur, méthodes, etc.
+    
 };
 
 // Classe Reservation
@@ -180,11 +184,24 @@ private:
 
 public:
     const Passager *passager;
-
-    // Constructor
-    // Constructeur par défaut
+    // méthode pour obtenir le vol associé à la réservation (version const)
+        const Vol* getVol() const {
+            return vol;
+        }
+    // constructeur par défaut
     Reservation() : idReservation(0), dateReservation({0, 0, 0}), passager(nullptr), vol(nullptr), paiement(nullptr) {}
 
+    //getter id reservation
+    int getIdReservation() const {
+        return idReservation;
+    }
+    
+    
+    //getter date reservation
+    Date getDateReservation() const{
+        return dateReservation;
+    }
+    
     Reservation(int id, const Date &date, const Passager *p, Vol *v, Paiement *pay)
         : idReservation(id), dateReservation(date), passager(p), vol(v), paiement(pay) {} // Setter utilisé dans la derniere fonctionnalité pour modifier le passager
     void setPassager(Passager *newPassager)
@@ -194,7 +211,7 @@ public:
 
     const Passager *getPassager() const { return passager; }
 
-    // Méthode pour calculer le montant total de la réservation en appliquant la réduction si nécessaire
+    // méthode pour calculer le montant total de la réservation en appliquant la réduction si nécessaire
     double calculerMontantTotal() const
     {
         double montantTotal = vol->getPrix(); // Montant total initial
@@ -223,7 +240,8 @@ int main()
         cout << "1. Fonctionnalité I : Gestion des vols" << endl;
         cout << "2. Fonctionnalité II : Gestion des passagers" << endl;
         cout << "3. Fonctionnalité III : Gestion des réservations" << endl;
-        cout << "4. Quitter" << endl;
+        cout << "4. Afficher le bulletin final pour chaque passager" << endl;
+        cout << "5. Quitter" << endl;
         cout << "Choix : ";
         cin >> choixMenu;
 
@@ -231,7 +249,7 @@ int main()
         {
         case '1':
         {
-            // Implémentation de la Fonctionnalité I : Gestion des vols
+            // *** Implémentation de la Fonctionnalité I : Gestion des vols ***
             // Demander à l'utilisateur de remplir les vols
             int nombreVols;
             cout << "Combien de vols souhaitez-vous ajouter ? ";
@@ -409,10 +427,10 @@ int main()
         }
         case '2':
         {
-            // Implémentation de la Fonctionnalité II : Gestion des passagers
+            // *** Implémentation de la Fonctionnalité II : Gestion des passagers ***
             // Demander à l'utilisateur de remplir l'ensemble des passagers
             int nombrePassagers;
-            cout << "Combien de passagers souhaitez-vous ajouter ? ";
+            cout << "Combien de passagers souhaitez-vous ajouter ? "<<endl;
             cin >> nombrePassagers;
 
             for (int i = 0; i < nombrePassagers; ++i)
@@ -423,12 +441,16 @@ int main()
                 cout << "Passager #" << i + 1 << ":" << endl;
                 cout << "ID du passager : ";
                 cin >> idPassager;
+                cout <<endl;
                 cout << "Nom du passager : ";
                 cin >> nom;
+                cout <<endl;
                 cout << "Numéro de téléphone : ";
                 cin >> telephone;
+                cout <<endl;
                 cout << "Numéro de passeport : ";
                 cin >> passeport;
+                cout <<endl;
 
                 // Créer le passager et l'ajouter à l'ensemble
                 Passager passager(idPassager, nom, telephone, passeport);
@@ -486,7 +508,7 @@ int main()
         }
         case '3':
         {
-            // Implémentation de la Fonctionnalité III : Gestion des réservations
+            // *** Implémentation de la Fonctionnalité III : Gestion des réservations ***
             // Demander à l'utilisateur de remplir le map avec les réservations
             int nombreReservations;
             cout << "Combien de réservations souhaitez-vous ajouter ? ";
@@ -497,8 +519,8 @@ int main()
                 int idReservation;
                 Date dateReservation;
                 const Passager *passager = nullptr; // Initialisation à nullptr pour le cas où le passager n'est pas trouvé
-                Vol *vol = nullptr;                 // Initialisation à nullptr pour le cas où le vol n'est pas trouvé
-                Paiement *paiement = nullptr;       // Initialisation à nullptr pour le cas où le paiement n'est pas trouvé
+                Vol *vol = nullptr;                 //  ""            ""         ""       ""   le vol n'est pas trouvé
+                Paiement *paiement = nullptr;       //   ""            ""         ""       ""  le paiement n'est pas trouvé
 
                 cout << "Réservation #" << i + 1 << ":" << endl;
                 cout << "ID de la réservation : ";
@@ -530,6 +552,7 @@ int main()
                         char reponse;
                         cout << "Passager non trouvé ! voulez vous re-essayer? (o/n)" << endl;
                         cin >> reponse;
+                        cout<<endl;
                         if (reponse != 'o')
                         {
                             break;
@@ -537,8 +560,8 @@ int main()
                         }
                        } while (!passagerTrouve);
 
-                       if (!passagerTrouve) { 
-                        continue; 
+                       if (!passagerTrouve) {
+                        continue;
                         }
                     
 
@@ -566,6 +589,7 @@ int main()
                             char reponse;
                             cout<<"Vol non trouvé ! Voulez vous re-essayer? (o/n)"<<endl;
                             cin>>reponse;
+                            cout<<endl;
                             if(reponse != 'o'){
                                 break;
                             }
@@ -574,13 +598,14 @@ int main()
                     } while (!volTrouve);
                     if (!volTrouve)
                     {
-                        continue; 
+                        continue;
                     }
 
                     // Demander à l'utilisateur de saisir les informations sur le paiement
                     string methodePaiement;
-                    cout << "Méthode de paiement (carte bancaire/espèces/chèque) : ";
+                    cout << "Méthode de paiement (carte bancaire/especes/cheque) : ";
                     cin >> methodePaiement;
+                    cout<<endl;
 
                     // Créer l'objet paiement avec les informations saisies
                     double montantTotal = vol->getPrix(); // Montant total initial
@@ -602,12 +627,14 @@ int main()
                 cout << "Voulez-vous modifier le passager d'une réservation ? (o/n) ";
                 char choix2;
                 cin >> choix2;
+                cout<<endl;
                 if (choix2 == 'o')
                 {
                     // Demander à l'utilisateur l'ID de la réservation à modifier
                     int idReservationAModifier;
                     cout << "Entrez l'ID de la réservation à modifier : ";
                     cin >> idReservationAModifier;
+                    cout<<endl;
 
                     // Recherche de la réservation correspondante dans le map
                     auto it = mapReservations.find(idReservationAModifier);
@@ -619,6 +646,7 @@ int main()
                         int nouvelIdPassager;
                         cout << "Entrez le nouvel ID du passager : ";
                         cin >> nouvelIdPassager;
+                        cout<<endl;
 
                         // Recherche du nouveau passager dans l'ensemble des passagers
                         const Passager *nouveauPassager = nullptr;
@@ -642,6 +670,7 @@ int main()
                         else
                         {
                             cout << "Passager non trouvé !" << endl;
+                            
                         }
                     }
                     else
@@ -654,6 +683,7 @@ int main()
                 cout << "Voulez-vous supprimer une réservation ? (o/n) ";
                 char choix3;
                 cin >> choix3;
+                cout<<endl;
                 if (choix3 == 'o')
                 {
                     // Demander à l'utilisateur l'ID de la réservation à supprimer
@@ -667,20 +697,61 @@ int main()
                     {
                         // Supprimer la réservation du map
                         mapReservations.erase(it);
-                        cout << "La réservation a été supprimée avec succès." << endl;
+                        cout << "La reservation a été supprimée avec succès." << endl;
                     }
                     else
                     {
-                        cout << "Réservation non trouvée !" << endl;
+                        cout << "Reservation non trouvee !" << endl;
                     }
                 }
                 break;
             }
-        case '4':
-        {
-            cout << "Programme terminé." << endl;
+        case '4':{
+
+                for (const Passager& passager : ensemblePassagers) {
+                    cout << "Identifiant passager: " << passager.getIdPassager() << endl;
+                    cout << "Numero passeport: " << passager.getPasseport() << endl;
+                    cout << "Nom passager: " << passager.getNom() << endl;
+
+                    // Calculer le total des réservations du passager
+                    int totalReservations = 0;
+
+                    // Parcourir les réservations
+                    for (const auto& pair : mapReservations) {
+                        const Reservation& reservation = pair.second;
+                        if (reservation.getPassager()->getIdPassager() == passager.getIdPassager()) {
+                            // Afficher les détails de la réservation
+                            cout << "Identifiant reservation: " << reservation.getIdReservation() << endl;
+                            cout << "Date: " << reservation.getDateReservation().jour << "/" << reservation.getDateReservation().mois << "/" << reservation.getDateReservation().annee << endl;
+                            cout << "Numero de vol: " << reservation.getVol()->getNumeroVol() << endl;
+                            cout << "Prix vol: " << reservation.getVol()->getPrix() << endl;
+
+                            totalReservations++;
+                        }
+                    }
+
+                    // Calculer le montant total à payer
+                    double montantTotalAPayer = 0.0;
+                    for (const auto& pair : mapReservations) {
+                        const Reservation& reservation = pair.second;
+                        if (reservation.getPassager()->getIdPassager() == passager.getIdPassager()) {
+                            montantTotalAPayer += reservation.calculerMontantTotal();
+                        }
+                    }
+
+                    // Afficher le total des réservations et le montant total à payer pour ce passager
+                    cout << "Total des reservations: " << totalReservations << endl;
+                    cout << "Montant total à payer: " << montantTotalAPayer << endl;
+                }
+
+                break;
+            }
+        
+            case '5': {
+            cout << "Programme termine." << endl;
             break;
         }
+
         default:
         {
             cout << "Choix invalide. Veuillez choisir une option valide." << endl;
@@ -688,7 +759,7 @@ int main()
         }
         }
         }
-        while (choixMenu != '4')
+        while (choixMenu != '5')
             ;
 
         return 0;
